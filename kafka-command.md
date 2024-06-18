@@ -58,5 +58,41 @@ kafka-console-consumer --bootstrap-server kafka_demo:19092 \
                        --property "key.separator= - " --property "print.key=true"
 ```
 
+## Consume Messages using Consumer Groups
+- consumer will be identified by group id, so pass --group <groupId> . we are going to be reading only the new messages. create this on 2 console and create min 2 partition . 
+  - Command to describe a specific Kafka topic.
+  - ```
+    docker exec --interactive --tty kafka_demo  \
+    kafka-topics --bootstrap-server kafka_demo:19092 --describe \
+    --topic test-topic
+    ```
+  -  Alter topic Partitions to 2 , partition 0 and partition 1
+  -  ```
+      docker exec --interactive --tty kafka_demo  \
+      kafka-topics --bootstrap-server kafka_demo:19092 \
+      --alter --topic test-topic --partitions 2
+     ```
+  - Run consumer on 2 different console using same command, data will come in round - robin sequence , ex: a-abc , 1-one, b-bcd , 2-two 
+  - ```
+    docker exec --interactive --tty kafka_demo  \
+    kafka-console-consumer --bootstrap-server kafka_demo:19092 \
+    --topic test-topic --group console-consumer-1\
+    --property "key.separator= - " --property "print.key=true"
 
+### List the topics in a cluster 
+
+- List all the different topics that are part of the Kafka cluster ( *__consumer_offsets is a topic which actually gets created automatically by the Kafka cluster to maintain the consumer offsets. *)
+  
+```
+docker exec --interactive --tty kafka_demo  \
+kafka-topics --bootstrap-server kafka_demo:19092 --list
+
+```
+
+### How to view consumer groups
+-
+```
+docker exec --interactive --tty kafka_demo  \
+kafka-consumer-groups --bootstrap-server kafka_demo:19092 --list
+```
 
