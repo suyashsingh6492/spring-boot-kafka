@@ -96,3 +96,14 @@ docker exec --interactive --tty kafka_demo  \
 kafka-consumer-groups --bootstrap-server kafka_demo:19092 --list
 ```
 
+
+## Log file and related config
+
+- Log into the kafka container.
+```
+docker exec -it kafka_demo bash
+```
+- The config file is present in the  ** /etc/kafka/server.properties ** path.
+- The log file is present in the ** /var/lib/kafka/data/ ** path.
+
+
