@@ -22,7 +22,7 @@ kafka-topics --bootstrap-server kafka_demo:19092 \
 ```
   - type **exit** to exit from kafka container
 
-- Produce Messages to the topic.
+- Produce and Consume Messages to the topic from console producer and console consumer.
   -  Open a new terminal, Logged into the container and then launch a console producer and produce Messages to the topic named test-topic.
   -  ```
      docker exec --interactive --tty kafka_demo  \
@@ -36,3 +36,27 @@ kafka-topics --bootstrap-server kafka_demo:19092 \
                        --topic test-topic \
                        --from-beginning
     ```
+ - Ctrl + c , to exit from the process. 
+
+## Producer and Consume the Messages With Key and Value
+
+- Produce Messages with Key and Value to the topic. key separator is - , send message like : g-GitHub , k-Kafka , k-Kibana
+- If you send key without - , then you will get exception *No key separator found on line* and process exit. This is a limitation when it comes to console producer.
+```
+docker exec --interactive --tty kafka_demo  \
+kafka-console-producer --bootstrap-server kafka_demo:19092 \
+                       --topic test-topic \
+                       --property "key.separator=-" --property "parse.key=true"
+```
+- Consuming messages with Key and Value from a topic. Print the key and value too. It will print : g - Github , g - Google
+
+```
+docker exec --interactive --tty kafka_demo  \
+kafka-console-consumer --bootstrap-server kafka_demo:19092 \
+                       --topic test-topic \
+                       --from-beginning \
+                       --property "key.separator= - " --property "print.key=true"
+```
+
+
+
