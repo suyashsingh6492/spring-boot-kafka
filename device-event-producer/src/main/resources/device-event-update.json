@@ -1,0 +1,10 @@
+{
+  "deviceEventId": 1232351,
+  "deviceEventType": "UPDATE",
+  "device": {
+    "deviceSerialNumber": "10018eb9-baed-4f8a-83c9-233894c77607",
+    "deviceName": "BioGasSensor",
+    "deviceModelId": 2,
+    "channel": "WEB"
+  }
+}
