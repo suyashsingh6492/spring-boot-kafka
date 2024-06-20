@@ -3,7 +3,7 @@
 - Review [yaml file ](docker-compose-brokers.yaml)
 - Run docker command and this will spin up a kafka cluster with 3 brokers running in background.
 ```
-docker-compose -f docker-compose-brokers.yml up -d 
+docker-compose -f docker-compose-brokers.yaml up -d 
 ```
 - Write across the three Kafka brokers that we have part of the cluster. Create topic with the replication factor as 3. we are going to write across the three Kafka brokers that we have part of the cluster and having 3 partition. If you have lesser broker , you will get exception after runing this command.
 - Even though I'm just providing the value as kafka_1:19092,  still, the Kafka topic is going to be expanded across all the Kafka brokers that are part of the cluster. 
