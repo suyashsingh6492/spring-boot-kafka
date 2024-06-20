@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active:
+      - local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  kafka:
+    topic: device-events
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
+        retry.backoff.ms: 1000
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  kafka:
+    producer:
+      bootstrap-servers: dev:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+---
+spring:
+  config:
+    activate:
+      on-profile: uat
+  kafka:
+    producer:
+      bootstrap-servers: uat:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer

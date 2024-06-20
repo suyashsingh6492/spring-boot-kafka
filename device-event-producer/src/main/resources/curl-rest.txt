@@ -1,0 +1,9 @@
+POST WITH-NULL-DEVICE-EVENT-ID
+---------------------
+curl -i \
+-d '{"deviceEventId":null,"deviceEventType": "NEW","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device","channel":"WEB","deviceModelId":123}}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/device/event
+
+
+
