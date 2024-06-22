@@ -23,22 +23,22 @@ import java.util.concurrent.TimeoutException;
 @Component
 public class DeviceEventProducer {
 
-    private final KafkaTemplate<Long, String> kafkaTemplate;
+    private final KafkaTemplate<Integer, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
     @Value("${spring.kafka.topic}")
     public String topic;
 
 
-    public DeviceEventProducer(KafkaTemplate<Long, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public DeviceEventProducer(KafkaTemplate<Integer, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
 
-    public CompletableFuture<SendResult<Long, String>> sendDeviceEvent(DeviceEvent deviceEvent)
+    public CompletableFuture<SendResult<Integer, String>> sendDeviceEvent(DeviceEvent deviceEvent)
             throws JsonProcessingException {
         String value = objectMapper.writeValueAsString(deviceEvent.device());
 
-        Long key = deviceEvent.deviceEventId();
+        Integer key = deviceEvent.deviceEventId();
         /*
         When this call is made for the very first time, there is a blocking call that happens.
         And what this call is for is to get the metadata about the Kafka cluster.
@@ -49,7 +49,7 @@ public class DeviceEventProducer {
 
 
         * */
-        CompletableFuture<SendResult<Long, String>> result
+        CompletableFuture<SendResult<Integer, String>> result
                 = kafkaTemplate.send(topic, key, value);
         return result.whenComplete((sendResult, throwable) -> {
             if (throwable != null) { //so that means there is some exception that's been experienced.
@@ -62,14 +62,14 @@ public class DeviceEventProducer {
     }
 
 
-    public SendResult<Long, String> sendDeviceEvent_sync(DeviceEvent deviceEvent)
+    public SendResult<Integer, String> sendDeviceEvent_sync(DeviceEvent deviceEvent)
             throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
         String value = objectMapper.writeValueAsString(deviceEvent.device());
 
-        Long key = deviceEvent.deviceEventId();
+        Integer key = deviceEvent.deviceEventId();
         //1. Blocking first call: to get metadata
         //2. Block and wait until the message to the kafka
-        SendResult<Long, String> sendResult = kafkaTemplate.send(topic, key, value)
+        SendResult<Integer, String> sendResult = kafkaTemplate.send(topic, key, value)
                 //.get();
                 .get(3, TimeUnit.SECONDS);  //timeout of 3 secs
         handleSuccess(key, value, sendResult);
@@ -77,18 +77,19 @@ public class DeviceEventProducer {
     }
 
 
-    public CompletableFuture<SendResult<Long, String>> sendDeviceEvent_sendObject(DeviceEvent deviceEvent)
+    public CompletableFuture<SendResult<Integer, String>> sendDeviceEvent_sendObject(DeviceEvent deviceEvent)
             throws JsonProcessingException {
-        String value = objectMapper.writeValueAsString(deviceEvent.device());
+//        String value = objectMapper.writeValueAsString(deviceEvent.device());
+        String value = objectMapper.writeValueAsString(deviceEvent);
 
-        Long key = deviceEvent.deviceEventId();
+        Integer key = deviceEvent.deviceEventId();
         /*
             producer record is kind of an object which is going to hold the key and value and the topic information.
             can add some additional metadata, such as header equivalent to Http headers.
         * */
 
-        ProducerRecord producerRecord = buildProducerRecord(Integer.valueOf(key + ""), value);
-        CompletableFuture<SendResult<Long, String>> result
+        ProducerRecord producerRecord = buildProducerRecord(key, value);
+        CompletableFuture<SendResult<Integer, String>> result
                 = kafkaTemplate.send(producerRecord);
         return result.whenComplete((sendResult, throwable) -> {
             if (throwable != null) { //so that means there is some exception that's been experienced.
@@ -107,12 +108,12 @@ public class DeviceEventProducer {
     }
 
 
-    private void handleSuccess(Long key, String value, SendResult<Long, String> sendResult) {
+    private void handleSuccess(Integer key, String value, SendResult<Integer, String> sendResult) {
         log.info("Message send successfully for the key {} , value {} , partition is {} ",
                 key, value, sendResult.getRecordMetadata().partition());
     }
 
-    private void handleFailure(Long key, String value, Throwable throwable) {
+    private void handleFailure(Integer key, String value, Throwable throwable) {
         log.error("Error sending the message and the exception is {} ", throwable.getMessage(), throwable);
     }
 }

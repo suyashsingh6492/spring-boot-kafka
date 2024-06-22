@@ -2,6 +2,9 @@ spring:
   profiles:
     active:
       - local
+topics:
+  retry: 'device-events.RETRY'
+  dead-letter: 'device-events.DLT'
 ---
 spring:
   config:
@@ -11,7 +14,7 @@ spring:
     topic: device-events
     producer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
-      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
         acks: all

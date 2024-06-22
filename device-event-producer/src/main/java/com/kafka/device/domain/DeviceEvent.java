@@ -1,7 +1,7 @@
 package com.kafka.device.domain;
 
 public record DeviceEvent(
-        Long deviceEventId,
+        Integer deviceEventId,
         DeviceEventType deviceEventType,
         Device device
 

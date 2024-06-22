@@ -9,12 +9,17 @@ curl -i \
 PUT WITH ID
 --------------
 curl -i \
--d '{"libraryEventId":1,"deviceEventType": "UPDATE","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device 2.X","channel":"WEB","deviceModelId":123}}' \
+-d '{"deviceEventId":1,"deviceEventType": "UPDATE","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device 2.X","channel":"WEB","deviceModelId":123}}' \
 -H "Content-Type: application/json" \
 -X PUT http://localhost:8080/v1/device/event
-
+--send this message to checks errors and after retry exhausted go to dead letter topic---
 curl -i \
--d '{"libraryEventId":2,"deviceEventType": "UPDATE","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device 2.X1","channel":"MOBILE","deviceModelId":123}}' \
+-d '{"deviceEventId":2,"deviceEventType": "UPDATE","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device 2.X1","channel":"MOBILE","deviceModelId":123}}' \
+-H "Content-Type: application/json" \
+-X PUT http://localhost:8080/v1/device/event
+--send this to simulate network issue exception---
+curl -i \
+-d '{"deviceEventId":999,"deviceEventType": "UPDATE","device":{"deviceSerialNumber":"10018eb9-baed-4f8a-83c9-233894c77607","deviceName":"Bio Sensor Device 2.X1","channel":"MOBILE","deviceModelId":123}}' \
 -H "Content-Type: application/json" \
 -X PUT http://localhost:8080/v1/device/event
 
