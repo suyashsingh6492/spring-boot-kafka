@@ -89,6 +89,7 @@ public class DeviceEventProducer {
         * */
 
         ProducerRecord producerRecord = buildProducerRecord(key, value);
+        //1. Blocking first call: to get metadata: => max.block.ms That's the timeout setting for getting the metadata.and then it will throw an error
         CompletableFuture<SendResult<Integer, String>> result
                 = kafkaTemplate.send(producerRecord);
         return result.whenComplete((sendResult, throwable) -> {
