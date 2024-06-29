@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.TreeMap;
+import java.util.concurrent.*;
 
 @Slf4j
 @Component
@@ -82,6 +80,7 @@ public class DeviceEventProducer {
 //        String value = objectMapper.writeValueAsString(deviceEvent.device());
         String value = objectMapper.writeValueAsString(deviceEvent);
 
+        ConcurrentHashMap map=new ConcurrentHashMap();
         Integer key = deviceEvent.deviceEventId();
         /*
             producer record is kind of an object which is going to hold the key and value and the topic information.

@@ -9,6 +9,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 @Slf4j
 public class RetryScheduler {
@@ -24,6 +26,7 @@ public class RetryScheduler {
     //it's going to be at scheduled, can use this annotation to create a cron job in spring.
     @Scheduled(fixedRate = 10_000) //particular scheduler run every 10s
     public void retryFailedRecords() {
+        ConcurrentHashMap map=new ConcurrentHashMap();
         log.info("Retry Failure records started ");
         failureRecordRepository.findAllByStatus(DeviceEventsConsumerConfig.RETRY)
                 .forEach(failureRecord -> {
